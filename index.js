@@ -5,7 +5,7 @@ module.exports = {
     version: '1.0.0',
     cookiebot: '1.0.0',
     description: 'Wikipedia, Urbandictionary',
-    dependencies: ['wikijs', 'urban-dictionary'],
+    dependencies: ['wikijs', 'urban-dictionary', '@jodacame/raejs'],
     enabled: true,
     async plugin (bot) {
         // Cargar comandos
