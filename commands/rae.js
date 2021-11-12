@@ -31,7 +31,7 @@ module.exports = {
 
         // Comprobar si hay un error
         if (res.error) return message.reply({
-            content: `No se encontró la definición \`${query}\``
+            content: `No se encontró la definición \`${query}\`.`
         });
 
         // Modelo

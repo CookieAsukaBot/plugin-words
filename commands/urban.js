@@ -52,7 +52,7 @@ module.exports = {
             })
             .catch(err => {
                 message.reply({
-                    content: `No se encontró la definición \`${query}\``
+                    content: `No se encontró la definición \`${query}\`.`
                 });
             });
 	}
