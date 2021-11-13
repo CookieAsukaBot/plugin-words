@@ -4,7 +4,7 @@ module.exports = {
     name: 'Words',
     version: '1.0.0',
     cookiebot: '1.0.0',
-    description: 'Wikipedia, Urbandictionary',
+    description: 'Plugin para obtener definiciones y artículos de Wikipedia.',
     dependencies: ['wikijs', 'urban-dictionary', '@jodacame/raejs'],
     enabled: true,
     async plugin (bot) {
