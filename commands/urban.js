@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const urban = require('urban-dictionary');
 
+const splitInMessages = require('../utils/splitInMessages');
+
 const sortByLikes = (results) => {
     return results.sort((a, b) => b.thumbs_up - a.thumbs_up);
 };
@@ -34,21 +36,40 @@ module.exports = {
                     text: results[0].definition
                 };
 
-                // Agregar definiciones extra
-                if (results[1]) definition.text += `\n\n${results[1].definition}`;
-
                 // Embed
                 let embed = new MessageEmbed()
                     .setColor(process.env.BOT_COLOR)
                     .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
-                    .setAuthor(definition.from, definition.icon, definition.url)
                     .setTitle(definition.title)
-                    .setDescription(definition.text);
 
-                // Responder
-                message.channel.send({
-                    embeds: [embed]
-                });
+                // Agregar definiciones extra
+                if (results[1]) definition.text += `\n\n${results[1].definition}`;
+
+                if (definition.text.length >= 1500) {
+                    // Partir info.
+                    let splitted = splitInMessages(definition.text);
+
+                    splitted.forEach(async (text, index) => {
+                        // Comprobar si no es el primer mensaje
+                        if (index >= 1) text = `...${text}`;
+
+                        // Embed
+                        embed.setAuthor(`${definition.from} (${index + 1}/${splitted.length})`, definition.icon, definition.url);
+                        embed.setDescription(text);
+
+                        // Responder
+                        await message.channel.send({
+                            embeds: [embed]
+                        });
+                    });
+                } else {
+                    embed.setDescription(definition.text);
+                    embed.setAuthor(definition.from, definition.icon, definition.url);
+                    // Responder
+                    message.channel.send({
+                        embeds: [embed]
+                    });
+                };
             })
             .catch(err => {
                 message.reply({
