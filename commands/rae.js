@@ -9,7 +9,7 @@ const cleanWords = (text) => {
         .replace(/&#xF3;/g, 'ó')
         .replace(/&#xFA;/g, 'ú')
         .replace(/&#xF1;/g, 'ñ')
-        .replace(/&#x2016/g, '||');
+        .replace(/&#x2016/g, '||||');
 };
 
 module.exports = {
