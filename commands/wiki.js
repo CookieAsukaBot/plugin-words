@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const wiki = require('wikijs').default;
 
+const splitInMessages = require('../utils/splitInMessages');
+
 module.exports = {
 	name: 'wiki',
     category: 'Words',
@@ -34,13 +36,33 @@ module.exports = {
                     .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
                     .setAuthor('Wikipedia', article.icon, article.url)
                     .setTitle(article.title)
-                    .setThumbnail(article.thumbnail)
-                    .setDescription(article.info); // Se necesita comprobar la longitud
+                    .setThumbnail(article.thumbnail);
 
-                // Responder
-                return message.channel.send({
-                    embeds: [embed]
-                });
+                // Comprobar longitud
+                if (article.info.length >= 1500) {
+                    // Partir info.
+                    let splitted = splitInMessages(article.info);
+
+                    splitted.forEach(async (text, index) => {
+                        // Comprobar si no es el primer mensaje
+                        if (index >= 1) text = `...${text}`;
+
+                        // Embed
+                        embed.setAuthor(`Wikipedia (1/${index + 1})`, article.icon, article.url);
+                        embed.setDescription(text);
+
+                        // Responder
+                        await message.channel.send({
+                            embeds: [embed]
+                        });
+                    });
+                } else {
+                    embed.setDescription(article.info);
+                    // Responder
+                    return message.channel.send({
+                        embeds: [embed]
+                    });
+                };
             })
             .catch(err => {
                 // Comprobar resultado
