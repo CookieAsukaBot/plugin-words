@@ -23,6 +23,7 @@ module.exports = {
             .then(async page => {
                 // Model
                 const article = {
+                    from: 'Wikipedia',
                     icon: 'https://cdn.icon-icons.com/icons2/2699/PNG/512/wikipedia_logo_icon_168863.png',
                     url: page.fullurl,
                     title: page.title,
@@ -34,7 +35,6 @@ module.exports = {
                 let embed = new MessageEmbed()
                     .setColor(process.env.BOT_COLOR)
                     .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
-                    .setAuthor('Wikipedia', article.icon, article.url)
                     .setTitle(article.title)
                     .setThumbnail(article.thumbnail);
 
@@ -48,7 +48,7 @@ module.exports = {
                         if (index >= 1) text = `...${text}`;
 
                         // Embed
-                        embed.setAuthor(`Wikipedia (1/${index + 1})`, article.icon, article.url);
+                        embed.setAuthor(`${article.from} (${index + 1}/${splitted.length})`, article.icon, article.url);
                         embed.setDescription(text);
 
                         // Responder
@@ -57,6 +57,7 @@ module.exports = {
                         });
                     });
                 } else {
+                    embed.setAuthor(article.from, article.icon, article.url);
                     embed.setDescription(article.info);
                     // Responder
                     return message.channel.send({
