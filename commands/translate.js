@@ -6,7 +6,7 @@ module.exports = {
     category: 'Words',
 	description: 'Traductor de inglés o español.',
     usage: '[texto a traducir]',
-    aliases: ['traducir', 'traductor'],
+    aliases: ['traducir', 'traductor', 'traduce'],
     cooldown: 3,
 	async execute (message, args, bot) {
         // Comprobar
@@ -21,8 +21,9 @@ module.exports = {
             .setColor(process.env.BOT_COLOR)
             .setAuthor("Traductor", "https://www.google.com/favicon.ico")
             .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
-            .setDescription("Selecciona la traducción:\n\n1️⃣ Del **Español** al **Inglés** 🇲🇽 ➡ 🇺🇸\n\n2️⃣ Del **Inglés** al **Español** 🇺🇸 ➡ 🇲🇽");
+            .setDescription("Elige una opción:\n\n1️⃣ Del **Español** al **Inglés** 🇲🇽 ➡ 🇺🇸\n\n2️⃣ Del **Inglés** al **Español** 🇺🇸 ➡ 🇲🇽");
 
+        // Responder
         message.channel.send({ embeds: [embed] })
             .then(async msg => {
                 await msg.react('1️⃣');
@@ -34,34 +35,40 @@ module.exports = {
                     time: 30 * 1000, // 30 segundos
                 });
 
-                collector.on('collect', async (reaction) => {
-                    let langs = { from: '', to: '' };
-                    let langText = ``;
+                // Variables
+                let output, langText;
+                let langs = {};
 
+                collector.on('collect', async (reaction) => {
                     if (reaction.emoji.name === "1️⃣") {
+                        langText = "🇲🇽 ➡ 🇺🇸";
                         langs.from = "es";
                         langs.to = "en";
-                        langText = "🇲🇽 ➡ 🇺🇸";
-                    };
-                    if (reaction.emoji.name === "2️⃣") {
+                    } else if (reaction.emoji.name === "2️⃣") {
+                        langText = "🇺🇸 ➡ 🇲🇽";
                         langs.from = "en";
                         langs.to = "es";
-                        langText = "🇺🇸 ➡ 🇲🇽";
                     };
 
                     // Petición
-                    let res = await translate(phrase, langs);
-                    embed.setDescription(`${langText}\n\n**${res}**`);
+                    let res = await translate(phrase, langs); // wip: ¿Qué pasa si no devuelve nada?
+                    output = `*${phrase}*\n\n${langText}\n\n**${res}**`;
 
-                    // Responder
-                    await msg.edit({ embeds: [embed] });
+                    // Detener
+                    embed.setDescription(output);
                     await collector.stop();
                 });
 
                 // Remover las reacciones al terminar
                 collector.on('end', async collected => {
-                    // console.log({ collected });
+                    // Comprobar reacción
+                    if (!langText) {
+                        output = `Se necesita de elegir una opción para traducir el mensaje.\nIntenta de nuevo.`;
+                        embed.setDescription(output);
+                    };
+
                     await msg.reactions.removeAll();
+                    await msg.edit({ embeds: [embed] });
                 });
             });
 	}
