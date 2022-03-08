@@ -51,8 +51,15 @@ module.exports = {
         // Embed
         let embed = new MessageEmbed()
             .setColor(process.env.BOT_COLOR)
-            .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
-            .setAuthor(definition.from, definition.icon, definition.url)
+            .setFooter({
+                text: `Pedido por ${message.author.username}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true })
+            })
+            .setAuthor({
+                name: definition.from,
+                iconURL: definition.icon,
+                url: definition.url
+            })
             .setTitle(definition.title)
             .setDescription(definition.text);
 

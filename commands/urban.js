@@ -39,7 +39,10 @@ module.exports = {
                 // Embed
                 let embed = new MessageEmbed()
                     .setColor(process.env.BOT_COLOR)
-                    .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
+                    .setFooter({
+                        text: `Pedido por ${message.author.username}`,
+                        iconURL: message.author.displayAvatarURL({ dynamic: true })
+                    })
                     .setTitle(definition.title)
 
                 // Agregar definiciones extra
@@ -54,7 +57,11 @@ module.exports = {
                         if (index >= 1) text = `...${text}`;
 
                         // Embed
-                        embed.setAuthor(`${definition.from} (${index + 1}/${splitted.length})`, definition.icon, definition.url);
+                        embed.setAuthor({
+                            name: `${definition.from} (${index + 1}/${splitted.length})`,
+                            iconURL: definition.icon,
+                            url: definition.url
+                        });
                         embed.setDescription(text);
 
                         // Responder
@@ -64,7 +71,11 @@ module.exports = {
                     });
                 } else {
                     embed.setDescription(definition.text);
-                    embed.setAuthor(definition.from, definition.icon, definition.url);
+                    embed.setAuthor({
+                        name: definition.from,
+                        iconURL: definition.icon,
+                        url: definition.url
+                    });
                     // Responder
                     message.channel.send({
                         embeds: [embed]

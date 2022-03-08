@@ -34,7 +34,10 @@ module.exports = {
                 // Embed
                 let embed = new MessageEmbed()
                     .setColor(process.env.BOT_COLOR)
-                    .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
+                    .setFooter({
+                        text: `Pedido por ${message.author.username}`,
+                        iconURL: message.author.displayAvatarURL({ dynamic: true })
+                    })
                     .setTitle(article.title)
                     .setThumbnail(article.thumbnail);
 
@@ -48,7 +51,11 @@ module.exports = {
                         if (index >= 1) text = `...${text}`;
 
                         // Embed
-                        embed.setAuthor(`${article.from} (${index + 1}/${splitted.length})`, article.icon, article.url);
+                        embed.setAuthor({
+                            name: `${article.from} (${index + 1}/${splitted.length})`,
+                            iconURL: article.icon,
+                            url: article.url
+                        });
                         embed.setDescription(text);
 
                         // Responder
@@ -57,8 +64,13 @@ module.exports = {
                         });
                     });
                 } else {
-                    embed.setAuthor(article.from, article.icon, article.url);
+                    embed.setAuthor({
+                        name: definition.from,
+                        iconURL: definition.icon,
+                        url: definition.url
+                    });
                     embed.setDescription(article.info);
+
                     // Responder
                     return message.channel.send({
                         embeds: [embed]

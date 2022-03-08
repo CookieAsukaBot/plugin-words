@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     name: 'Words',
-    version: '1.1.1',
+    version: '1.1.2',
     cookiebot: '1.0.0',
     description: 'Plugin para obtener definiciones, traducciones y artículos de Wikipedia.',
     dependencies: ['wikijs', 'urban-dictionary', '@jodacame/raejs', 'translate-google'],
