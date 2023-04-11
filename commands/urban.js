@@ -1,11 +1,11 @@
-const { MessageEmbed } = require('discord.js');
+const {EmbedBuilder} = require('discord.js');
 const urban = require('urban-dictionary');
 
 const splitInMessages = require('../utils/splitInMessages');
 
 const sortByLikes = (results) => {
     return results.sort((a, b) => b.thumbs_up - a.thumbs_up);
-};
+}
 
 module.exports = {
 	name: 'urban',
@@ -17,8 +17,8 @@ module.exports = {
         // Obtener query
         const query = args.join(' ').trim();
         // Comprobar query
-        if (query.length <= 0) return message.reply({
-            content: `Uso del comando: ${bot.prefix}${this.name} ${this.usage}`
+        if (query.length <= 0) return message.channel.send({
+            content: `**${message.author.username}**, uso del comando: ${bot.prefix}${this.name} ${this.usage}`
         });
 
         // Buscar
@@ -34,10 +34,10 @@ module.exports = {
                     url: results[0].permalink,
                     title: results[0].word,
                     text: results[0].definition
-                };
+                }
 
                 // Embed
-                let embed = new MessageEmbed()
+                let embed = new EmbedBuilder()
                     .setColor(process.env.BOT_COLOR)
                     .setFooter({
                         text: `Pedido por ${message.author.username}`,
@@ -80,12 +80,12 @@ module.exports = {
                     message.channel.send({
                         embeds: [embed]
                     });
-                };
+                }
             })
             .catch(err => {
-                message.reply({
-                    content: `No se encontró la definición \`${query}\`.`
+                message.channel.send({
+                    content: `**${message.author.username}**, no se encontró la definición de \`${query}\`.`
                 });
             });
 	}
-};
+}

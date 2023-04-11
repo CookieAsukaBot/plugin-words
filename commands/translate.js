@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const {EmbedBuilder} = require('discord.js');
 const translate = require('translate-google');
 
 module.exports = {
@@ -10,17 +10,17 @@ module.exports = {
     cooldown: 3,
 	async execute (message, args, bot) {
         // Comprobar
-        if (!args) return message.reply(`${bot.prefix}${this.name} ${this.usage}`);
+        if (!args) return message.channel.send(`**${message.author.username}**, ${bot.prefix}${this.name} ${this.usage}`);
 
         // Variables
         let phrase = args.join(' ').trim();
-        if (phrase.length >= 501) return message.reply("Has sobrepasado el límite de caracteres (500).");
+        if (phrase.length >= 501) return message.channel.send(`**${message.author.username}**, has sobrepasado el límite de caracteres (500).`);
 
         // Embed
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor("Traductor", "https://www.google.com/favicon.ico")
-            .setFooter(`Pedido por ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
+            .setAuthor({ name: "Traductor", iconURL: "https://www.google.com/favicon.ico" })
+            .setFooter({ text: `Pedido por ${message.author.username}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
             .setDescription("Elige una opción:\n\n1️⃣ Del **Español** al **Inglés** 🇲🇽 ➡ 🇺🇸\n\n2️⃣ Del **Inglés** al **Español** 🇺🇸 ➡ 🇲🇽");
 
         // Responder
@@ -37,7 +37,7 @@ module.exports = {
 
                 // Variables
                 let output, langText;
-                let langs = {};
+                let langs = {}
 
                 collector.on('collect', async (reaction) => {
                     if (reaction.emoji.name === "1️⃣") {
@@ -48,7 +48,7 @@ module.exports = {
                         langText = "🇺🇸 ➡ 🇲🇽";
                         langs.from = "en";
                         langs.to = "es";
-                    };
+                    }
 
                     // Petición
                     let res = await translate(phrase, langs); // wip: ¿Qué pasa si no devuelve nada?
@@ -65,11 +65,11 @@ module.exports = {
                     if (!langText) {
                         output = `Se necesita de elegir una opción para traducir el mensaje.\nIntenta de nuevo.`;
                         embed.setDescription(output);
-                    };
+                    }
 
                     await msg.reactions.removeAll();
                     await msg.edit({ embeds: [embed] });
                 });
             });
 	}
-};
+}

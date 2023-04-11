@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const {EmbedBuilder} = require('discord.js');
 const raejs = require('@jodacame/raejs');
 
 const cleanWords = (text) => {
@@ -10,7 +10,7 @@ const cleanWords = (text) => {
         .replace(/&#xFA;/g, 'ú')
         .replace(/&#xF1;/g, 'ñ')
         .replace(/&#x2016/g, '||||');
-};
+}
 
 module.exports = {
 	name: 'rae',
@@ -22,16 +22,16 @@ module.exports = {
         // Obtener query
         const query = args.join(' ').trim().toLowerCase();
         // Comprobar query
-        if (query.length <= 0) return message.reply({
-            content: `Uso del comando: ${bot.prefix}${this.name} ${this.usage}`
+        if (query.length <= 0) return message.channel.send({
+            content: `**${message.author.username}**, uso del comando: ${bot.prefix}${this.name} ${this.usage}`
         });
 
         // Buscar
         const res = await raejs.search(query);
 
         // Comprobar si hay un error
-        if (res.error) return message.reply({
-            content: `No se encontró la definición \`${query}\`.`
+        if (res.error) return message.channel.send({
+            content: `**${message.author.username}**, no se encontró la definición \`${query}\`.`
         });
 
         // Modelo
@@ -41,7 +41,7 @@ module.exports = {
             url: '',
             title: res.results[0].header,
             text: ''
-        };
+        }
 
         // Agregar definiciones
         res.results[0].definition.forEach(def => {
@@ -49,7 +49,7 @@ module.exports = {
         });
 
         // Embed
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
             .setFooter({
                 text: `Pedido por ${message.author.username}`,
@@ -68,4 +68,4 @@ module.exports = {
             embeds: [embed]
         });
 	}
-};
+}

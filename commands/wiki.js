@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const {EmbedBuilder} = require('discord.js');
 const wiki = require('wikijs').default;
 
 const splitInMessages = require('../utils/splitInMessages');
@@ -14,8 +14,8 @@ module.exports = {
         // Obtener query
         const query = args.join(' ').trim();
         // Comprobar query
-        if (query.length <= 0) return message.reply({
-            content: `Uso del comando: ${bot.prefix}${this.name} ${this.usage}`
+        if (query.length <= 0) return message.channel.send({
+            content: `**${message.author.username}**, uso del comando: ${bot.prefix}${this.name} ${this.usage}`
         });
 
         // Buscar
@@ -29,10 +29,10 @@ module.exports = {
                     title: page.title,
                     thumbnail: await page.mainImage(),
                     info: await page.summary()
-                };
+                }
 
                 // Embed
-                let embed = new MessageEmbed()
+                let embed = new EmbedBuilder()
                     .setColor(process.env.BOT_COLOR)
                     .setFooter({
                         text: `Pedido por ${message.author.username}`,
@@ -75,13 +75,13 @@ module.exports = {
                     return message.channel.send({
                         embeds: [embed]
                     });
-                };
+                }
             })
             .catch(err => {
                 // Comprobar resultado
-                return message.reply({
-                    content: `Ocurrió un error al encontrar el artículo \`${query}\`.`
+                message.channel.send({
+                    content: `**${message.author.username}**, ocurrió un error al encontrar el artículo \`${query}\`.`
                 });
             });
 	}
-};
+}

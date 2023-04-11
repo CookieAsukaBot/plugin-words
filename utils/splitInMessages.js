@@ -10,10 +10,10 @@ function splitInMessages (input) {
 
         output.push(input.substring(initIndex, endIndex));
         i = endIndex;
-    };
+    }
 
     // Devolver
     return output;
-};
+}
 
 module.exports = splitInMessages;
