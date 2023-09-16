@@ -10,17 +10,17 @@ module.exports = {
     cooldown: 3,
 	async execute (message, args, bot) {
         // Comprobar
-        if (!args) return message.channel.send(`**${message.author.username}**, ${bot.prefix}${this.name} ${this.usage}`);
+        if (!args) return message.channel.send(`**${message.author.globalName}**, ${bot.prefix}${this.name} ${this.usage}`);
 
         // Variables
         let phrase = args.join(' ').trim();
-        if (phrase.length >= 501) return message.channel.send(`**${message.author.username}**, has sobrepasado el límite de caracteres (500).`);
+        if (phrase.length >= 501) return message.channel.send(`**${message.author.globalName}**, has sobrepasado el límite de caracteres (500).`);
 
         // Embed
         let embed = new EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
             .setAuthor({ name: "Traductor", iconURL: "https://www.google.com/favicon.ico" })
-            .setFooter({ text: `Pedido por ${message.author.username}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+            .setFooter({ text: `Pedido por ${message.author.globalName}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
             .setDescription("Elige una opción:\n\n1️⃣ Del **Español** al **Inglés** 🇲🇽 ➡ 🇺🇸\n\n2️⃣ Del **Inglés** al **Español** 🇺🇸 ➡ 🇲🇽");
 
         // Responder

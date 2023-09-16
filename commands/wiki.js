@@ -15,7 +15,7 @@ module.exports = {
         const query = args.join(' ').trim();
         // Comprobar query
         if (query.length <= 0) return message.channel.send({
-            content: `**${message.author.username}**, uso del comando: ${bot.prefix}${this.name} ${this.usage}`
+            content: `**${message.author.globalName}**, uso del comando: ${bot.prefix}${this.name} ${this.usage}`
         });
 
         // Buscar
@@ -35,7 +35,7 @@ module.exports = {
                 let embed = new EmbedBuilder()
                     .setColor(process.env.BOT_COLOR)
                     .setFooter({
-                        text: `Pedido por ${message.author.username}`,
+                        text: `Pedido por ${message.author.globalName}`,
                         iconURL: message.author.displayAvatarURL({ dynamic: true })
                     })
                     .setTitle(article.title)
@@ -80,7 +80,7 @@ module.exports = {
             .catch(err => {
                 // Comprobar resultado
                 message.channel.send({
-                    content: `**${message.author.username}**, ocurrió un error al encontrar el artículo \`${query}\`.`
+                    content: `**${message.author.globalName}**, ocurrió un error al encontrar el artículo \`${query}\`.`
                 });
             });
 	}
